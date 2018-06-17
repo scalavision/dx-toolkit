@@ -216,7 +216,7 @@ def publish_assets(src_record, record_ids, publish):
     public_asset_projects_by_region = _get_public_asset_projects()
 
     # Add src_record to list of records to publish
-    dx_record = dxpy.DXRecord(src_record)
+    dx_record = dxpy.DXRecord(src_record, project=dxpy.describe(src_record)['project'])
     region = dxpy.describe(dx_record.project)['region']
     record_ids[region] = dx_record.id
 
@@ -228,7 +228,7 @@ def publish_assets(src_record, record_ids, publish):
         if region not in public_asset_projects_by_region:
             print('Did not find public asset project for region {region}.'.format(region=region))
             continue
-        dx_record = dxpy.DXRecord(record_id)
+        dx_record = dxpy.DXRecord(record_id, project=dxpy.describe(record_id)['project'])
         if publish:
             dx_record.clone(public_asset_projects_by_region[region])
             print('Published asset for region {region} in project {project}.'.format(region=region, 
