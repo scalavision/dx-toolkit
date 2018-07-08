@@ -37,6 +37,7 @@ from dxpy.exceptions import (DXAPIError, DXFileError, DXError, DXJobFailureError
 from dxpy.utils import pretty_print, warn, Nonce
 from dxpy.utils.resolver import resolve_path, resolve_existing_path, ResolutionError, is_project_explicit
 import dxpy.app_builder as app_builder
+import dxpy.executable_builder as executable_builder
 
 def get_objects_from_listf(listf):
     objects = []
@@ -3030,7 +3031,7 @@ class TestIdempotentRequests(unittest.TestCase):
 
 class TestAppBuilderUtils(unittest.TestCase):
     def test_assert_consistent_regions(self):
-        assert_consistent_regions = app_builder.assert_consistent_regions
+        assert_consistent_regions = executable_builder.assert_consistent_regions
 
         # These calls should not raise exceptions.
 
