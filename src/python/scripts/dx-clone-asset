@@ -67,7 +67,8 @@ def _parse_args():
                     choices=['normal', 'high'],
                     required=False)
     ap.add_argument('--publish',
-                    help='Move the assets to the public assets project upon completion.',
+                    #help='Move the assets to the public assets project upon completion.',
+                    help=argparse.SUPPRESS,
                     action='store_true',
                     required=False)
 
