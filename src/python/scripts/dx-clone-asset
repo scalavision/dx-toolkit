@@ -213,7 +213,7 @@ def clone_asset(record_id, regions, num_retries=0, priority=None):
     return record_ids
 
 
-def publish_assets(src_record, record_ids, publish):
+def publish_assets(src_record, record_ids):
     public_asset_projects_by_region = _get_public_asset_projects()
 
     # Add src_record to list of records to publish
@@ -221,24 +221,16 @@ def publish_assets(src_record, record_ids, publish):
     region = dxpy.describe(dx_record.project)['region']
     record_ids[region] = dx_record.id
 
-    # Print a message if we're not actually going to publish the records
-    if not publish:
-        print('To publish your records at a later point in time, run:')
 
     for region, record_id in record_ids.iteritems():
         if region not in public_asset_projects_by_region:
             print('Did not find public asset project for region {region}.'.format(region=region))
             continue
         dx_record = dxpy.DXRecord(record_id, project=dxpy.describe(record_id)['project'])
-        if publish:
-            dx_record.clone(public_asset_projects_by_region[region])
-            print('Published asset for region {region} in project {project}.'.format(region=region, 
-                project=public_asset_projects_by_region[region]))
-            dx_record.remove()
-        else:
-            msg = '  dx cp {src_project}:{record_id} {dest_project}:/'.format(src_project=dx_record.project,
-                record_id=record_id, dest_project=public_asset_projects_by_region[region])
-            print(msg)
+        dx_record.clone(public_asset_projects_by_region[region])
+        print('Published asset for region {region} in project {project}.'.format(region=region, 
+            project=public_asset_projects_by_region[region]))
+        dx_record.remove()
 
 
 def main(record, regions, num_retries=0, priority=None, publish=False):
@@ -249,7 +241,8 @@ def main(record, regions, num_retries=0, priority=None, publish=False):
         print('{region}:\t{record_id}'.format(region=region, record_id=record_id))
 
     all_record_ids = record_ids.copy()
-    publish_assets(record, record_ids, publish)
+    if publish:
+        publish_assets(record, record_ids)
 
 
 if __name__ == '__main__':
