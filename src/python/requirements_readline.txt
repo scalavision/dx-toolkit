@@ -1,1 +1,2 @@
 gnureadline==6.3.3
+urllib3
